@@ -12,6 +12,7 @@ import com.flingeria.data.DownloadState
 import com.flingeria.data.ModelManager
 import com.flingeria.ModelViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModelScreen(modifier: Modifier = Modifier) {
     val context = androidx.compose.ui.platform.LocalContext.current
