@@ -50,6 +50,7 @@ class ChatViewModel : ViewModel() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FlingerApp(vm: ChatViewModel = viewModel()) {
     var tab by remember { mutableIntStateOf(0) }
