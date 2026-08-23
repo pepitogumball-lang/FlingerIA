@@ -16,8 +16,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.flingeria.data.DownloadState
+import com.flingeria.data.ModelManager
 import com.flingeria.data.StorageManager
 import com.flingeria.domain.ChatMessage
+import com.flingeria.ui.ModelScreen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -28,6 +31,11 @@ class MainActivity : ComponentActivity() {
         StorageManager(this).initialize()
         setContent { FlingerTheme { FlingerApp() } }
     }
+}
+
+class ModelViewModel(private val manager: ModelManager) : ViewModel() {
+    val state = manager.state
+    fun startDownload() { viewModelScope.launch { manager.download() } }
 }
 
 class ChatViewModel : ViewModel() {
@@ -59,7 +67,11 @@ fun FlingerApp(vm: ChatViewModel = viewModel()) {
         topBar = { TopAppBar(title = { Text("FlingerIA") }, actions = { IconButton(onClick = {}) { Icon(Icons.Default.Settings, "Ajustes") } }) },
         bottomBar = { NavigationBar { tabs.forEachIndexed { index, item -> NavigationBarItem(selected = tab == index, onClick = { tab = index }, icon = { Icon(item.second, item.first) }, label = { Text(item.first) }) } } }
     ) { padding ->
-        if (tab == 0) ChatScreen(vm, Modifier.padding(padding)) else PlaceholderScreen(tabs[tab].first, Modifier.padding(padding))
+        when (tab) {
+            0 -> ChatScreen(vm, Modifier.padding(padding))
+            2 -> ModelScreen(Modifier.padding(padding))
+            else -> PlaceholderScreen(tabs[tab].first, Modifier.padding(padding))
+        }
     }
 }
 
